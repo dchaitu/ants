@@ -27,6 +27,7 @@ class Place:
         # Phase 1: Add an entrance to the exit
         # BEGIN Problem 2
         "*** YOUR CODE HERE ***"
+        self.entrance = exit
         # END Problem 2
 
     def add_insect(self, insect):
@@ -67,7 +68,7 @@ class Insect:
         >>> test_insect.health
         3
         """
-        self.health.health.health.health.health -= amount
+        self.health -= amount
         if self.health <= 0:
             self.death_callback()
             self.place.remove_insect(self)
@@ -154,10 +155,14 @@ class Ant(Insect):
 
 class HarvesterAnt(Ant):
     """HarvesterAnt produces 1 additional food per turn for the colony."""
-
     name = 'Harvester'
     implemented = True
     # OVERRIDE CLASS ATTRIBUTES HERE
+    # def __init__(self):
+    #     super().__init__()
+    #     self.food_cost = 2
+    food_cost = 2
+
 
     def action(self, gamestate):
         """Produce 1 additional food for the colony.
@@ -166,6 +171,7 @@ class HarvesterAnt(Ant):
         """
         # BEGIN Problem 1
         "*** YOUR CODE HERE ***"
+        gamestate.food+=1
         # END Problem 1
 
 
@@ -176,7 +182,10 @@ class ThrowerAnt(Ant):
     implemented = True
     damage = 1
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
-
+    # def __init__(self):
+    #     super().__init__()
+    #     self.food_cost = 3
+    food_cost = 3
     def nearest_bee(self):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
@@ -192,7 +201,7 @@ class ThrowerAnt(Ant):
         if target is not None:
             target.reduce_health(self.damage)
 
-    def action(self, gamestate):
+    def action(self, gamesgamestate):
         """Throw a leaf at the nearest Bee in range."""
         self.throw_at(self.nearest_bee())
 
