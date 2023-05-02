@@ -188,6 +188,8 @@ class ThrowerAnt(Ant):
     #     super().__init__()
     #     self.food_cost = 3
     food_cost = 3
+    lower_bound = 0
+    upper_bound = float('inf')
     def nearest_bee(self):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
@@ -196,12 +198,16 @@ class ThrowerAnt(Ant):
         """
         # BEGIN Problem 3 and 4
 
+        distance = 0
         present_place = self.place
-        while not present_place.is_hive:
-            if present_place.bees:
+        while present_place.is_hive is False:
+            if present_place.bees and self.lower_bound <= distance <= self.upper_bound:
+                # print(f"Bee present at {distance} ")
                 return random_bee(present_place.bees)
             else:
                 present_place = present_place.entrance
+                distance += 1
+            # print(f'distance = {distance}')
         return None
 
         # return random_bee(self.place.bees)  # REPLACE THIS LINE
@@ -235,7 +241,38 @@ class ShortThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    health = 1
+    lower_bound = 0
+    upper_bound = 3
+
+    def __init__(self, health=1):
+        """Create an Insect with a HEALTH quantity."""
+        super().__init__(health)
+        self.health = health
+
+    # def nearest_bee(self):
+    #     """Return the nearest Bee in a Place that is not the HIVE, connected to
+    #     the ThrowerAnt's Place by following entrances.
+    #
+    #     This method returns None if there is no such Bee (or none in range).
+    #     """
+    #     # print("****Near****")
+    #
+    #     present_place = self.place
+    #     distance = 0
+    #     while present_place.is_hive == False and (distance <= self.upper_bound):
+    #         if present_place.bees:
+    #             return random_bee(present_place.bees)
+    #         else:
+    #             present_place = present_place.entrance
+    #             distance += 1
+    #         # print("Distance = "+str(distance))
+    #     return None
+
+
+
+
     # END Problem 4
 
 
@@ -246,7 +283,36 @@ class LongThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    health = 1
+    lower_bound = 5
+    upper_bound = float('inf')
+
+    def __init__(self, health=1):
+        """Create an Insect with a HEALTH quantity."""
+        super().__init__(health)
+        self.health = health
+
+    # def nearest_bee(self):
+    #     """Return the nearest Bee in a Place that is not the HIVE, connected to
+    #     the ThrowerAnt's Place by following entrances.
+    #
+    #     This method returns None if there is no such Bee (or none in range).
+    #     """
+    #
+    #     present_place = self.place
+    #     distance = 0
+    #     # print(f'start distance {distance}')
+    #     while present_place.is_hive == False:
+    #         if present_place.bees and lower_bound <= distance <= upper_bound:
+    #
+    #             return random_bee(present_place.bees)
+    #         else:
+    #             present_place = present_place.entrance
+    #             distance += 1
+    #         # print(f'distance {distance}')
+    #     return None
+
     # END Problem 4
 
 
@@ -274,6 +340,7 @@ class FireAnt(Ant):
         """
         # BEGIN Problem 5
         "*** YOUR CODE HERE ***"
+
         # END Problem 5
 
 # BEGIN Problem 6
