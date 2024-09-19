@@ -110,6 +110,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
     is_container = False
+    blocks_path = True
 
     # ADD CLASS ATTRIBUTES HERE
 
@@ -163,6 +164,7 @@ class Ant(Insect):
         """Double this ants's damage, if it has not already been doubled."""
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        self.damage = self.damage*2
         # END Problem 12
 
 
@@ -559,7 +561,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
     def remove_from(self, place):
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
-        pass
+        return None
         # END Problem 12
 
 
@@ -665,15 +667,17 @@ class NinjaAnt(Ant):
     name = 'Ninja'
     damage = 1
     food_cost = 5
+    blocks_path = False
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem Optional 1
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
 
     # END Problem Optional 1
 
     def action(self, gamestate):
         # BEGIN Problem Optional 1
-        "*** YOUR CODE HERE ***"
+        for bee in self.place.bees[:]:
+            bee.reduce_health(self.damage)
         # END Problem Optional 1
 
 
@@ -689,16 +693,22 @@ class LaserAnt(ThrowerAnt):
     food_cost = 10
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem Optional 2
-    implemented = False  # Change to True to view in the GUI
-
+    implemented = True  # Change to True to view in the GUI
+    damage = 2
     # END Problem Optional 2
 
     def __init__(self, health=1):
         super().__init__(health)
         self.insects_shot = 0
+        self.damage = LaserAnt.damage
 
     def insects_in_front(self):
         # BEGIN Problem Optional 2
+        dis = {}
+        for bee in self.place.bees:
+            dis[bee] = 0
+
+
         return {}
         # END Problem Optional 2
 
@@ -750,7 +760,11 @@ class NinjaBee(Bee):
     name = 'NinjaBee'
 
     def blocked(self):
-        return False
+        if self.place.ant is None:
+            return False
+        if not self.place.ant.blocks_path:
+            return False
+        return True
 
 
 class Boss(Wasp, Hornet):
