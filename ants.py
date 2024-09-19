@@ -55,6 +55,7 @@ class Insect:
     """An Insect, the base class of Ant and Bee, has health and a Place."""
 
     damage = 0
+    is_waterproof = False
 
     # ADD CLASS ATTRIBUTES HERE
 
@@ -458,9 +459,17 @@ class TankAnt(ContainerAnt):
     name = 'Tank'
     food_cost = 6
     implemented = True
+    damage = 1
 
     def __init__(self, health=2):
         super().__init__(health)
+
+    def action(self, gamestate):
+        if self.ant_contained:
+            self.ant_contained.action(gamestate)
+
+        for bee in self.place.bees[:]:
+            bee.reduce_health(self.damage)
 
 
 
@@ -476,6 +485,10 @@ class Water(Place):
     def add_insect(self, insect):
         """Add an Insect to this place. If the insect is not waterproof, reduce
         its health to 0."""
+        Place.add_insect(self, insect)
+        if not insect.is_waterproof:
+            insect.reduce_health(insect.health)
+
         # BEGIN Problem 10
         "*** YOUR CODE HERE ***"
         # END Problem 10
@@ -557,16 +570,17 @@ class SlowThrower(ThrowerAnt):
 
     name = 'Slow'
     food_cost = 6
+    health = 1
     # BEGIN Problem 13
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
 
     # END Problem 13
 
     def throw_at(self, target):
 
         # BEGIN Problem 13
-        if _______________:
-            ____________________ = _____
+        if target:
+            app = _____
 
             def slow_action(gamestate):
                 if ____________________:
@@ -584,7 +598,8 @@ class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
 
     name = 'Remover'
-    implemented = False
+    implemented = True
+    health = 0
 
     def __init__(self):
         super().__init__(0)
@@ -595,6 +610,8 @@ class Bee(Insect):
 
     name = 'Bee'
     damage = 1
+    is_waterproof = True
+
 
     # OVERRIDE CLASS ATTRIBUTES HERE
 
