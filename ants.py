@@ -486,9 +486,16 @@ class Water(Place):
 # END Problem 11
 
 # BEGIN Problem 12
+class ScubaThrower(ThrowerAnt):
+    name = 'Scuba'
+    food_cost = 6
+    implemented = True
+    is_waterproof = True
 
+    def __init__(self, health=1):
+        super().__init__(health)
 
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
     # END Problem 12
     """QueenAnt is a ScubaThrower that boosts the damage of all ants behind her."""
 
@@ -496,7 +503,11 @@ class QueenAnt(Ant):  # You should change this line
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
+
+    def __init__(self, health=1):
+        super().__init__(health)
+
 
     # END Problem 12
 
@@ -506,6 +517,19 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+
+        super().action(gamestate)
+        # back_place = self.place.exit
+        current_place = self.place.exit
+        while current_place is not None:
+            if current_place.ant:
+                current_place.ant.double()
+                if current_place.ant.is_container and current_place.ant.ant_contained:
+                    # print(current_place.name)
+                    # print(current_place.ant.ant_contained)
+                    current_place.ant.ant_contained.double()
+
+            current_place = current_place.exit
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -514,12 +538,18 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().reduce_health(amount)
+        if self.health <= 0:
+            ants_lose()
         # END Problem 12
 
     def remove_from(self, place):
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        pass
         # END Problem 12
+
+
 
 
 class SlowThrower(ThrowerAnt):
